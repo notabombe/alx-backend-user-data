@@ -52,8 +52,7 @@ class SessionAuth(Auth):
         """
         session_cookie = self.session_cookie(request)
         user_id = self.user_id_for_session_id(session_cookie)
-        user = User.get(user_id)
-        return user
+        return User.get(user_id)
 
     def destroy_session(self, request=None):
         """

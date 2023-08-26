@@ -13,8 +13,7 @@ def hash_password(password: str) -> bytes:
         password (str): password to be hashed
     """
     b = password.encode()
-    hashed = hashpw(b, bcrypt.gensalt())
-    return hashed
+    return hashpw(b, bcrypt.gensalt())
 
 
 def is_valid(hashed_password: bytes, password: str) -> bool:

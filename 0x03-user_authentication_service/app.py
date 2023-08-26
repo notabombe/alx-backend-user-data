@@ -78,8 +78,7 @@ def profile() -> str:
     Return a user's email based on session_id in the received cookies
     """
     session_id = request.cookies.get("session_id")
-    user = AUTH.get_user_from_session_id(session_id)
-    if user:
+    if user := AUTH.get_user_from_session_id(session_id):
         return jsonify({"email": f"{user.email}"}), 200
     abort(403)
 

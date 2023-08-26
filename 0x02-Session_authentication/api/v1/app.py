@@ -36,9 +36,7 @@ def bef_req():
     """
     Filter each request before it's handled by the proper route
     """
-    if auth is None:
-        pass
-    else:
+    if auth is not None:
         setattr(request, "current_user", auth.current_user(request))
         excluded = [
             '/api/v1/status/',

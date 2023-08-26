@@ -37,8 +37,7 @@ class SessionDBAuth(SessionExpAuth):
         Return:
             user id or None if session_id is None or not a string
         """
-        user_id = UserSession.search({"session_id": session_id})
-        if user_id:
+        if user_id := UserSession.search({"session_id": session_id}):
             return user_id
         return None
 
@@ -52,8 +51,7 @@ class SessionDBAuth(SessionExpAuth):
         session_id = self.session_cookie(request)
         if not session_id:
             return False
-        user_session = UserSession.search({"session_id": session_id})
-        if user_session:
+        if user_session := UserSession.search({"session_id": session_id}):
             user_session[0].remove()
             return True
         return False

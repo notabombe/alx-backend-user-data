@@ -23,8 +23,11 @@ def filter_datum(fields: List[str], redaction: str,
         separator (str): the character separating the fields
     """
     for field in fields:
-        message = re.sub(field+'=.*?'+separator,
-                         field+'='+redaction+separator, message)
+        message = re.sub(
+            f'{field}=.*?{separator}',
+            f'{field}={redaction}{separator}',
+            message,
+        )
     return message
 
 
@@ -49,9 +52,7 @@ class RedactingFormatter(logging.Formatter):
             formatted string
         """
         message = super(RedactingFormatter, self).format(record)
-        redacted = filter_datum(self.fields, self.REDACTION,
-                                message, self.SEPARATOR)
-        return redacted
+        return filter_datum(self.fields, self.REDACTION, message, self.SEPARATOR)
 
 
 def get_logger() -> logging.Logger:
@@ -78,11 +79,9 @@ def get_db() -> mysql.connector.connection.MySQLConnection:
     passwd = os.getenv('PERSONAL_DATA_DB_PASSWORD') or ""
     host = os.getenv('PERSONAL_DATA_DB_HOST') or "localhost"
     db_name = os.getenv('PERSONAL_DATA_DB_NAME')
-    conn = mysql.connector.connect(user=user,
-                                   password=passwd,
-                                   host=host,
-                                   database=db_name)
-    return conn
+    return mysql.connector.connect(
+        user=user, password=passwd, host=host, database=db_name
+    )
 
 
 def main():
@@ -95,7 +94,7 @@ def main():
     cursor.execute("SELECT * FROM users;")
     fields = cursor.column_names
     for row in cursor:
-        message = "".join("{}={}; ".format(k, v) for k, v in zip(fields, row))
+        message = "".join(f"{k}={v}; " for k, v in zip(fields, row))
         logger.info(message.strip())
     cursor.close()
     db.close()
